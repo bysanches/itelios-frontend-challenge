@@ -1,0 +1,24 @@
+{
+  "name": "itelios-frontend-challenge",
+  "version": "1.0.0",
+  "description": "![Itelios](http://www.itelios.com.br/images/logo_itelios_orange@2x.png)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bysanches/itelios-frontend-challenge.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bysanches/itelios-frontend-challenge/issues"
+  },
+  "homepage": "https://github.com/bysanches/itelios-frontend-challenge#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  }
+}
