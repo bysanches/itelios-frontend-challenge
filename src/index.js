@@ -43,25 +43,109 @@ const renderProduct = item => {
     );
 };
 
+function addToggleActions(card) {
+    card.addEventListener('mouseover', () => {
+        show(card.querySelector('.actions'));
+    });
+    card.addEventListener('mouseout', () => {
+        hide(card.querySelector('.actions'));
+    });
+}
+
+function hide(element) {
+    element.style.display = 'none';
+}
+
+function show(element) {
+    element.style.display = 'block';
+}
+
+function clean(parent) {
+    let children = Array.prototype.slice.call(parent.children);
+    for (let child of children) {
+        child.remove();
+    }
+}
+
+class Carousel {
+    constructor(size, selector, paginationSelector) {
+        this.size = size;
+        this.element = document.querySelector(selector);
+        this.items = Array.prototype.slice.call(this.element.children);
+        this.paginationElement = document.querySelector(paginationSelector);
+        this.paginate(1);
+
+        this.renderPagination();
+    }
+
+    paginate(page) {
+        for (let item of this.items) {
+            hide(item);
+        }
+
+        let toShow = this.items.slice((page - 1) * this.size, this.size * page);
+        for (let item of toShow) {
+            show(item);
+        }
+    }
+
+    renderPagination() {
+        let el = this.paginationElement;
+        clean(el);
+        let pageCount = Math.ceil(this.items.length / this.size);
+        let self = this;
+
+        for (let i = 0; i < pageCount; i++) {
+            let page = i + 1;
+            let link = document.createElement('a');
+            link.href = '#';
+            link.textContent = page;
+            link.addEventListener('click', e => {
+                self.paginate(page)
+                e.preventDefault();
+            });
+
+            let li = document.createElement('li');
+            li.appendChild(link);
+
+            el.appendChild(li);
+        }
+    }
+
+    setSize(newSize) {
+        this.size = newSize;
+        this.paginate(1);
+        this.renderPagination();
+    }
+}
+
+const breakpoint = 576;
+
+
 fetchProducts(data => {
     let visitedItem = data[0].data.item;
     document.getElementById('visited').innerHTML = renderProduct(visitedItem);
 
     let recommendation = data[0].data.recommendation;
-    let recommendationHtml = recommendation.slice(0, 3).reduce((html, item) => html += renderProduct(item), '');
+    let recommendationHtml = recommendation.reduce((html, item) => html += renderProduct(item), '');
     document.getElementById('recommendation').innerHTML = recommendationHtml;
-    
-    function addToggleActions(card) {
-        card.addEventListener('mouseover', () => {
-            card.querySelector('.actions').style.display = 'block';
-        });
-        card.addEventListener('mouseout', () => {
-            card.querySelector('.actions').style.display = 'none';
-        });
-    }
 
     let cards = document.querySelectorAll('.card');
     for (let card of cards) {
         addToggleActions(card);
     }
+
+    let size = 3;
+    if (window.innerWidth < breakpoint) {
+        size = 1;
+    }
+    let carousel = window.carousel = new Carousel(size, '#recommendation', '#recommendation-pagination');
+
+    window.addEventListener('resize', e => {
+        let size = 3;
+        if (window.innerWidth < breakpoint) {
+            size = 1;
+        }
+        carousel.setSize(size);
+    });
 })

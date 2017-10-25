@@ -15,6 +15,7 @@ html {
 .card {
     flex: 1;
     /* max-width: 300px; */
+    min-height: 300px;
     border: solid 1px #ddd;
     padding: 1rem;
 }
@@ -57,7 +58,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .actions {
     text-align: center;
-    margin: 1em;
+    margin: 1em 0;
 }
 .btn {
     background-color: white;
@@ -75,4 +76,17 @@ h1, h2, h3, h4, h5, h6 {
 
 .actions {
     display: none;
+}
+
+/** pagination */
+
+ul.pagination {
+    margin: auto;
+    padding: 0;
+}
+
+ul.pagination li {
+    list-style-type: none;
+    display: inline;
+    margin-left: 1em;
 }
