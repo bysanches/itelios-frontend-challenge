@@ -22,7 +22,7 @@ const renderPaymentConditions = conditions => {
 
 const renderProduct = item => {
     return (
-        `<div class="product card col-md">
+        `<div class="product card col-1">
             <div class="card-body">
                 <img src="${getImageUrl(item.imageName)}">
                 <p class="card-text">${item.name}</p>
@@ -43,79 +43,80 @@ const renderProduct = item => {
     );
 };
 
-function addToggleActions(card) {
+const addToggleActions = card => {
     card.addEventListener('mouseover', () => {
         show(card.querySelector('.actions'));
     });
     card.addEventListener('mouseout', () => {
         hide(card.querySelector('.actions'));
     });
-}
+};
 
-function hide(element) {
-    element.style.display = 'none';
-}
+const hide = el => el.style.display = 'none';
 
-function show(element) {
-    element.style.display = 'block';
-}
+const show = el => el.style.display = 'block';
 
-function clean(parent) {
-    let children = Array.prototype.slice.call(parent.children);
-    for (let child of children) {
+const clear = parent => {
+    let children = parent.children;
+    for (let i = 0; i < children.length; i++) {
+        let child = children[i];
         child.remove();
     }
-}
+};
 
 class Carousel {
     constructor(size, selector, paginationSelector) {
         this.size = size;
         this.element = document.querySelector(selector);
-        this.items = Array.prototype.slice.call(this.element.children);
+        this.items = Array.from(this.element.children);
         this.paginationElement = document.querySelector(paginationSelector);
-        this.paginate(1);
-
+        
         this.renderPagination();
+        this.paginate(1);
     }
 
     paginate(page) {
-        for (let item of this.items) {
-            hide(item);
+        for (let i = 0; i < this.items.length; i++) {
+            hide(this.items[i]);
         }
 
         let toShow = this.items.slice((page - 1) * this.size, this.size * page);
-        for (let item of toShow) {
-            show(item);
+        for (let i = 0; i < toShow.length; i++) {
+            show(toShow[i]);
+        }
+        
+        this.resetActive();
+        this.paginationElement.children[page - 1].className = 'active';
+    }
+
+    resetActive() {
+        let elements = this.paginationElement.querySelectorAll('.active');
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].className = '';
         }
     }
 
     renderPagination() {
         let el = this.paginationElement;
-        clean(el);
+        clear(el);
         let pageCount = Math.ceil(this.items.length / this.size);
         let self = this;
 
         for (let i = 0; i < pageCount; i++) {
             let page = i + 1;
-            let link = document.createElement('a');
-            link.href = '#';
-            link.textContent = page;
-            link.addEventListener('click', e => {
-                self.paginate(page)
+            let li = document.createElement('li');
+            li.addEventListener('click', e => {
+                self.paginate(page);
                 e.preventDefault();
             });
-
-            let li = document.createElement('li');
-            li.appendChild(link);
-
             el.appendChild(li);
         }
     }
 
     setSize(newSize) {
         this.size = newSize;
-        this.paginate(1);
         this.renderPagination();
+        this.paginate(1);
     }
 }
 
@@ -130,16 +131,11 @@ fetchProducts(data => {
     let recommendationHtml = recommendation.reduce((html, item) => html += renderProduct(item), '');
     document.getElementById('recommendation').innerHTML = recommendationHtml;
 
-    let cards = document.querySelectorAll('.card');
-    for (let card of cards) {
-        addToggleActions(card);
-    }
-
     let size = 3;
     if (window.innerWidth < breakpoint) {
         size = 1;
     }
-    let carousel = window.carousel = new Carousel(size, '#recommendation', '#recommendation-pagination');
+    let carousel = new Carousel(size, '#recommendation', '#recommendation-pagination');
 
     window.addEventListener('resize', e => {
         let size = 3;
