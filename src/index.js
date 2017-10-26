@@ -57,10 +57,8 @@ const hide = el => el.style.display = 'none';
 const show = el => el.style.display = 'block';
 
 const clear = parent => {
-    let children = parent.children;
-    for (let i = 0; i < children.length; i++) {
-        let child = children[i];
-        child.remove();
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
     }
 };
 
@@ -76,6 +74,10 @@ class Carousel {
     }
 
     paginate(page) {
+        let pageCount = this.pageCount();
+        if (page > pageCount) page = pageCount;
+        if (page < 1) page = 1;
+
         for (let i = 0; i < this.items.length; i++) {
             hide(this.items[i]);
         }
@@ -96,20 +98,23 @@ class Carousel {
         }
     }
 
-    renderPagination() {
-        let el = this.paginationElement;
-        clear(el);
-        let pageCount = Math.ceil(this.items.length / this.size);
+    pageCount() {
+        return Math.ceil(this.items.length / this.size);
+    }
+
+    createPaginationItem(page) {
         let self = this;
+        let li = document.createElement('li');
+        li.addEventListener('click', e => self.paginate(page));
+        this.paginationElement.appendChild(li);
+    }
+
+    renderPagination() {
+        clear(this.paginationElement);
+        let pageCount = this.pageCount();
 
         for (let i = 0; i < pageCount; i++) {
-            let page = i + 1;
-            let li = document.createElement('li');
-            li.addEventListener('click', e => {
-                self.paginate(page);
-                e.preventDefault();
-            });
-            el.appendChild(li);
+            this.createPaginationItem(i + 1);
         }
     }
 
@@ -120,7 +125,7 @@ class Carousel {
     }
 }
 
-const breakpoint = 576;
+const breakpoint = 768;
 
 
 fetchProducts(data => {
@@ -142,6 +147,7 @@ fetchProducts(data => {
         if (window.innerWidth < breakpoint) {
             size = 1;
         }
+        console.log('resize', size);
         carousel.setSize(size);
     });
 })
