@@ -37,3 +37,37 @@ O objetivo do desafio é simples: Consumir uma json via xhttp e, com o resultado
 - Não utilização de bibliotecas ou frameworks
 - Fidelidade ao design proposto
 - Adaptação mobile
+
+## Como executar o projeto
+
+Baixe o projeto na máquina:
+```
+git clone https://github.com/bysanches/itelios-frontend-challenge.git
+```
+
+Em seguida, instale as dependências e rode o build:
+```
+cd itelios-frontend-challenge
+npm install
+npm run build
+```
+
+Para rodar o projeto, pode ser utilizado o http-server do node:
+```
+npm install -g http-server
+http-server
+```
+
+Navegue até a página em `localhost:8080`.
+
+## Sobre o desenvolvimento
+
+Desenvolvi a prateleira utilizando o babel para poder utilizar o es6 no desenvolvimento, sem nenhuma biblioteca javascript para a construção do carrossel.
+Utilizei no grid o flexbox do css3, e me inspirei no estilo e marcação utilizado pelo bootstrap.
+Para a adaptação mobile, utilizei media-queries e javascript para adaptar o flexbox e jogar as sugestões para baixo, e limitar o número de itens exibidos para 1 no caso de telas pequenas. Dessa forma a informação fica mais legível para o usuário.
+A aplicação foi testada no Chrome, Firefox e Edge.
+
+## Próximos passos
+
+Para continuar o desenvolvimento, organizaria o componente do carrossel para garantir a reusabilidade e adicionaria testes.
+Também reveria a forma como é feita a interação com o DOM, para garantir a performance da página.
