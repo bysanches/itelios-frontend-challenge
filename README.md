@@ -70,4 +70,5 @@ A aplicação foi testada no Chrome, Firefox e Edge.
 ## Próximos passos
 
 Para continuar o desenvolvimento, organizaria o componente do carrossel para garantir a reusabilidade e adicionaria testes.
+Testaria em mais browsers e versões.
 Também reveria a forma como é feita a interação com o DOM, para garantir a performance da página.
